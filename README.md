@@ -29,6 +29,15 @@ ID,Name,Address
 
 The template is a text of text/template package of Go.
 
+### Arguments
+
+The fields of CSV record can be referred as arguments. The name is preceeded by a period such as
+
+- .Field1
+- .Field2
+- .Field3
+- ...
+
 ### Functions
 
 The following functions are defined.
