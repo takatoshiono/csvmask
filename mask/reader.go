@@ -10,9 +10,9 @@ import (
 type (
 	// Reader reads from a CSV data and mask it.
 	Reader struct {
-		r       *csv.Reader
-		rules   Rules
-		lineNum int
+		r        *csv.Reader
+		template Template
+		lineNum  int
 
 		// If SkipHeader is true, the first line is skipped masking as header.
 		SkipHeader bool
@@ -20,10 +20,10 @@ type (
 )
 
 // NewReader returns a new reader that reads from r while masking data according to the rule.
-func NewReader(r io.Reader, rules Rules) *Reader {
+func NewReader(r io.Reader, template Template) *Reader {
 	return &Reader{
-		r:     csv.NewReader(r),
-		rules: rules,
+		r:        csv.NewReader(r),
+		template: template,
 	}
 }
 
@@ -44,23 +44,22 @@ func (r *Reader) Read() (string, error) {
 		return s, nil
 	}
 
-	if len(record) != len(r.rules) {
-		return "", fmt.Errorf("the number of rules is %d but must same as csv fields %d", len(r.rules), len(record))
-	}
-
-	for i, field := range record {
-		record[i], err = r.rules[i].Convert(field)
-		if err != nil {
-			return "", fmt.Errorf("failed to convert field %d at line %d: %v", i, r.lineNum, err)
-		}
-	}
-
-	s, err := toCSV(record)
+	buf := bytes.Buffer{}
+	err = r.template.Execute(&buf, toFieldsMap(record))
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to execute template: %v", err)
 	}
 
-	return s, nil
+	return buf.String(), nil
+}
+
+func toFieldsMap(record []string) map[string]string {
+	out := make(map[string]string)
+	for i, field := range record {
+		key := fmt.Sprintf("Field%d", i+1)
+		out[key] = field
+	}
+	return out
 }
 
 func toCSV(record []string) (string, error) {

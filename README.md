@@ -1,5 +1,5 @@
 # csvmask
-csvmask is a tool of masking CSV encoded data.
+csvmask is a CSV masking tool.
 
 ## Usage
 
@@ -11,23 +11,30 @@ $ cat testdata/test.csv
 4085ff59-39bd-4cc3-8a55-c5b1c6785922,Adam Smith,Kirkcaldy United Kingdom
 ```
 
-2. Execute csvmak with masking rules
-The rule is formatted as CSV and have same number of fields as the prepared CSV data.
+2. Create template
 
 ```
-$ cat testdata/test.csv | csvmask -rule "Raw,Hash,Raw" -skipheader
+{{.Field1}},{{hash .Field2}},{{.Field3}}
+```
+
+3. Execute csvmask with template
+
+```
+$ cat testdata/test.csv | csvmask -template "{{.Field1}},{{hash .Field2}},{{.Field3}}" -skipheader
 ID,Name,Address
-4085ff59-39bd-4cc3-8a55-c5b1c6785922,PbZ8hc4alo56RYc9/m+vECyVdjHqZRGMlxUGigh3/uE,Kirkcaldy United Kingdom
+4085ff59-39bd-4cc3-8a55-c5b1c6785922,"PbZ8hc4alo56RYc9/m+vECyVdjHqZRGMlxUGigh3/uE",Kirkcaldy United Kingdom
 ```
 
-## Masking Rules
+## Template
 
-- Raw
-  - Output as is.
-- Hash
-  - Output hashed data.
-- Checksum
-  - Output checksum of data.
+The template is a text of text/template package of Go.
+
+### Functions
+
+The following functions are defined.
+
+- hash
+- checksum
 
 ## Install
 
@@ -37,7 +44,7 @@ $ go get -u github.com/takatoshiono/csvmask
 
 ## Known issues
 
-Output CSV format may be different from original due to the csv package of Go.
+When the first line of CSV is skipped as header by `-skipheader`, its output may be changed from original.
 
 - A quoted-field will be removed the quote characters.
 - A field contains white-space without quote will be quoted.

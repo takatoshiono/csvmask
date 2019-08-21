@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strings"
 
 	"github.com/takatoshiono/csvmask/mask"
 )
@@ -17,8 +16,8 @@ const (
 
 var (
 	showHelp   bool
-	ruleStr    string
 	skipHeader bool
+	template   string
 )
 
 func main() {
@@ -27,8 +26,8 @@ func main() {
 
 func realMain() int {
 	flag.BoolVar(&showHelp, "help", false, "Show help")
-	flag.StringVar(&ruleStr, "rule", "", "Comma separated masking rule of csv")
 	flag.BoolVar(&skipHeader, "skipheader", false, "Skip first line of file as header")
+	flag.StringVar(&template, "template", "", "The template of output")
 	flag.Parse()
 
 	if showHelp {
@@ -36,17 +35,13 @@ func realMain() int {
 		return exitOK
 	}
 
-	if ruleStr == "" {
-		flag.PrintDefaults()
+	template, err := mask.NewTemplate(template)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "failed to new template: %v\n", err)
 		return exitErr
 	}
 
-	rules, err := mask.NewRules(strings.Split(ruleStr, ","))
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "failed to new rules: %v\n", err)
-		return exitErr
-	}
-	reader := mask.NewReader(os.Stdin, rules)
+	reader := mask.NewReader(os.Stdin, template)
 	reader.SkipHeader = skipHeader
 
 	for {
