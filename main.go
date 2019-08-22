@@ -53,7 +53,7 @@ func realMain() int {
 			fmt.Fprintf(os.Stderr, "failed to read: %v\n", err)
 			return exitErr
 		}
-		fmt.Fprint(os.Stdout, s)
+		fmt.Fprintln(os.Stdout, s)
 	}
 
 	return exitOK
