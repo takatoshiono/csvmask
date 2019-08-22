@@ -1,6 +1,7 @@
 package mask_test
 
 import (
+	"bytes"
 	"io"
 	"os"
 	"testing"
@@ -10,21 +11,32 @@ import (
 
 func TestRead(t *testing.T) {
 	tests := []struct {
-		name     string
-		file     string
-		template string
-		wants    []string
+		name       string
+		file       string
+		template   string
+		skipHeader bool
+		wants      []string
 	}{
 		{
-			name:     "valid",
-			file:     "../testdata/test.csv",
-			template: "{{.Field1}},{{hash .Field2}},{{.Field3}}",
+			name:       "test.csv",
+			file:       "../testdata/test.csv",
+			template:   "{{.Field1}},{{hash .Field2}},{{.Field3}}",
+			skipHeader: false,
 			wants: []string{
 				"ID,3NHVIj9zs6llwH4/9dvuPu3P7bgGaGoFubOGiiw9bVA,Address",
 				"4085ff59-39bd-4cc3-8a55-c5b1c6785922,PbZ8hc4alo56RYc9/m+vECyVdjHqZRGMlxUGigh3/uE,Kirkcaldy United Kingdom",
 			},
 		},
-		// TODO: add test cases
+		{
+			name:       "test.csv skip header",
+			file:       "../testdata/test.csv",
+			template:   "{{.Field1}},{{hash .Field2}},{{.Field3}}",
+			skipHeader: true,
+			wants: []string{
+				"ID,Name,Address\n", // FIXME
+				"4085ff59-39bd-4cc3-8a55-c5b1c6785922,PbZ8hc4alo56RYc9/m+vECyVdjHqZRGMlxUGigh3/uE,Kirkcaldy United Kingdom",
+			},
+		},
 	}
 
 	for _, tt := range tests {
@@ -41,6 +53,10 @@ func TestRead(t *testing.T) {
 			defer f.Close()
 
 			r := mask.NewReader(f, template)
+			if tt.skipHeader {
+				r.SkipHeader = true
+			}
+
 			for i := 0; ; i++ {
 				got, err := r.Read()
 				if err != nil {
@@ -52,6 +68,35 @@ func TestRead(t *testing.T) {
 				if got != tt.wants[i] {
 					t.Errorf("want read %v, but got %v", tt.wants[i], got)
 				}
+			}
+		})
+	}
+}
+
+func TestReadFuncs(t *testing.T) {
+	tests := []struct {
+		name     string
+		str      string
+		template string
+		want     string
+	}{
+		{"hash", "foo,bar", "{{hash .Field1}},{{.Field2}}", "LCa0a2j/xo/5m0U8HTBBNBNCLXBkg7+g+YpeiGJm564,bar"},
+		{"checksum", "foo,bar", "{{checksum .Field1}},{{.Field2}}", "8c736521,bar"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			template, err := mask.NewTemplate(tt.template)
+			if err != nil {
+				t.Fatal(err)
+			}
+			r := mask.NewReader(bytes.NewBufferString(tt.str), template)
+			got, err := r.Read()
+			if err != nil {
+				t.Fatal(err)
+			}
+			if got != tt.want {
+				t.Errorf("want read %v, but got %v", tt.want, got)
 			}
 		})
 	}
