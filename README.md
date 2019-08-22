@@ -22,7 +22,7 @@ $ cat testdata/test.csv
 ```
 $ cat testdata/test.csv | csvmask -template "{{.Field1}},{{hash .Field2}},{{.Field3}}" -skipheader
 ID,Name,Address
-4085ff59-39bd-4cc3-8a55-c5b1c6785922,"PbZ8hc4alo56RYc9/m+vECyVdjHqZRGMlxUGigh3/uE",Kirkcaldy United Kingdom
+4085ff59-39bd-4cc3-8a55-c5b1c6785922,PbZ8hc4alo56RYc9/m+vECyVdjHqZRGMlxUGigh3/uE,Kirkcaldy United Kingdom
 ```
 
 ## Template
@@ -50,10 +50,3 @@ The following functions are defined.
 ```
 $ go get -u github.com/takatoshiono/csvmask
 ```
-
-## Known issues
-
-When the first line of CSV is skipped as header by `-skipheader`, its output may be changed from original.
-
-- A quoted-field will be removed the quote characters.
-- A field contains white-space without quote will be quoted.

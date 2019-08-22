@@ -33,7 +33,7 @@ func TestRead(t *testing.T) {
 			template:   "{{.Field1}},{{hash .Field2}},{{.Field3}}",
 			skipHeader: true,
 			wants: []string{
-				"ID,Name,Address\n", // FIXME
+				"ID,Name,Address",
 				"4085ff59-39bd-4cc3-8a55-c5b1c6785922,PbZ8hc4alo56RYc9/m+vECyVdjHqZRGMlxUGigh3/uE,Kirkcaldy United Kingdom",
 			},
 		},

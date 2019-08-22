@@ -36,16 +36,18 @@ func (r *Reader) Read() (string, error) {
 	}
 	r.lineNum++
 
+	var tmpl Template
 	if r.lineNum == 1 && r.SkipHeader {
-		s, err := toCSV(record)
+		tmpl, err = r.template.CloneWithEcho()
 		if err != nil {
-			return "", err
+			return "", fmt.Errorf("failed clone with echo: %v", err)
 		}
-		return s, nil
+	} else {
+		tmpl = r.template
 	}
 
 	buf := bytes.Buffer{}
-	err = r.template.Execute(&buf, toFieldsMap(record))
+	err = tmpl.Execute(&buf, toFieldsMap(record))
 	if err != nil {
 		return "", fmt.Errorf("failed to execute template: %v", err)
 	}
@@ -60,17 +62,4 @@ func toFieldsMap(record []string) map[string]string {
 		out[key] = field
 	}
 	return out
-}
-
-func toCSV(record []string) (string, error) {
-	var buf bytes.Buffer
-	w := csv.NewWriter(&buf)
-	if err := w.Write(record); err != nil {
-		return "", fmt.Errorf("failed to write record as csv: %v", err)
-	}
-	w.Flush()
-	if err := w.Error(); err != nil {
-		return "", fmt.Errorf("failed to flush record as csv: %v", err)
-	}
-	return buf.String(), nil
 }
