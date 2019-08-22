@@ -1,4 +1,4 @@
-package mask
+package csvmask
 
 import (
 	"bytes"

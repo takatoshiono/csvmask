@@ -6,7 +6,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/takatoshiono/csvmask/mask"
+	"github.com/takatoshiono/csvmask"
 )
 
 const (
@@ -35,13 +35,13 @@ func realMain() int {
 		return exitOK
 	}
 
-	template, err := mask.NewTemplate(template)
+	template, err := csvmask.NewTemplate(template)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to new template: %v\n", err)
 		return exitErr
 	}
 
-	reader := mask.NewReader(os.Stdin, template)
+	reader := csvmask.NewReader(os.Stdin, template)
 	reader.SkipHeader = skipHeader
 
 	for {

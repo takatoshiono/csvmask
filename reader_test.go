@@ -1,4 +1,4 @@
-package mask_test
+package csvmask_test
 
 import (
 	"bytes"
@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/takatoshiono/csvmask/mask"
+	"github.com/takatoshiono/csvmask"
 )
 
 func TestRead(t *testing.T) {
@@ -19,7 +19,7 @@ func TestRead(t *testing.T) {
 	}{
 		{
 			name:       "test.csv",
-			file:       "../testdata/test.csv",
+			file:       "./testdata/test.csv",
 			template:   "{{.Field1}},{{hash .Field2}},{{.Field3}}",
 			skipHeader: false,
 			wants: []string{
@@ -29,7 +29,7 @@ func TestRead(t *testing.T) {
 		},
 		{
 			name:       "test.csv skip header",
-			file:       "../testdata/test.csv",
+			file:       "./testdata/test.csv",
 			template:   "{{.Field1}},{{hash .Field2}},{{.Field3}}",
 			skipHeader: true,
 			wants: []string{
@@ -41,7 +41,7 @@ func TestRead(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			template, err := mask.NewTemplate(tt.template)
+			template, err := csvmask.NewTemplate(tt.template)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -52,7 +52,7 @@ func TestRead(t *testing.T) {
 			}
 			defer f.Close()
 
-			r := mask.NewReader(f, template)
+			r := csvmask.NewReader(f, template)
 			if tt.skipHeader {
 				r.SkipHeader = true
 			}
@@ -86,11 +86,11 @@ func TestReadFuncs(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			template, err := mask.NewTemplate(tt.template)
+			template, err := csvmask.NewTemplate(tt.template)
 			if err != nil {
 				t.Fatal(err)
 			}
-			r := mask.NewReader(bytes.NewBufferString(tt.str), template)
+			r := csvmask.NewReader(bytes.NewBufferString(tt.str), template)
 			got, err := r.Read()
 			if err != nil {
 				t.Fatal(err)
