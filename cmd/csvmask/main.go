@@ -35,13 +35,13 @@ func realMain() int {
 		return exitOK
 	}
 
-	template, err := csvmask.NewTemplate(template)
+	tmpl, err := csvmask.NewTemplate(template)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to new template: %v\n", err)
 		return exitErr
 	}
 
-	reader := csvmask.NewReader(os.Stdin, template)
+	reader := csvmask.NewReader(os.Stdin, tmpl)
 	reader.SkipHeader = skipHeader
 
 	for {
