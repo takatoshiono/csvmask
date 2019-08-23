@@ -35,6 +35,11 @@ func realMain() int {
 		return exitOK
 	}
 
+	if template == "" {
+		flag.PrintDefaults()
+		return exitErr
+	}
+
 	tmpl, err := csvmask.NewTemplate(template)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to new template: %v\n", err)
