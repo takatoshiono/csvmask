@@ -7,6 +7,8 @@ import (
 	"os"
 )
 
+var version = "dev"
+
 const (
 	exitOK = iota
 	exitErr
@@ -14,6 +16,7 @@ const (
 
 var (
 	showHelp    bool
+	showVersion bool
 	skipHeader  bool
 	templateStr string
 )
@@ -24,12 +27,18 @@ func main() {
 
 func realMain() int {
 	flag.BoolVar(&showHelp, "help", false, "Show help")
+	flag.BoolVar(&showVersion, "version", false, "Show version")
 	flag.BoolVar(&skipHeader, "skipheader", false, "Skip first line of file as header")
 	flag.StringVar(&templateStr, "template", "", "The template of output")
 	flag.Parse()
 
 	if showHelp {
 		flag.PrintDefaults()
+		return exitOK
+	}
+
+	if showVersion {
+		fmt.Println(version)
 		return exitOK
 	}
 
