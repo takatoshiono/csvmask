@@ -1,12 +1,10 @@
-package csvmask_test
+package main
 
 import (
 	"bytes"
 	"io"
 	"os"
 	"testing"
-
-	"github.com/takatoshiono/csvmask"
 )
 
 func TestRead(t *testing.T) {
@@ -41,7 +39,7 @@ func TestRead(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			template, err := csvmask.NewTemplate(tt.template)
+			template, err := NewTemplate(tt.template)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -52,7 +50,7 @@ func TestRead(t *testing.T) {
 			}
 			defer f.Close()
 
-			r := csvmask.NewReader(f, template)
+			r := NewReader(f, template)
 			if tt.skipHeader {
 				r.SkipHeader = true
 			}
@@ -86,11 +84,11 @@ func TestReadFuncs(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			template, err := csvmask.NewTemplate(tt.template)
+			template, err := NewTemplate(tt.template)
 			if err != nil {
 				t.Fatal(err)
 			}
-			r := csvmask.NewReader(bytes.NewBufferString(tt.str), template)
+			r := NewReader(bytes.NewBufferString(tt.str), template)
 			got, err := r.Read()
 			if err != nil {
 				t.Fatal(err)

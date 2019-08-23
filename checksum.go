@@ -1,4 +1,4 @@
-package csvmask
+package main
 
 import (
 	"fmt"

@@ -1,9 +1,7 @@
-package csvmask_test
+package main
 
 import (
 	"testing"
-
-	"github.com/takatoshiono/csvmask"
 )
 
 func TestNewTemplate(t *testing.T) {
@@ -21,7 +19,7 @@ func TestNewTemplate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tmpl, err := csvmask.NewTemplate(tt.text)
+			tmpl, err := NewTemplate(tt.text)
 			if tt.wantErr {
 				if err == nil {
 					t.Fatal("want error, but got no error")
