@@ -10,5 +10,5 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Run test
-        command: make test
+          name: Run test
+          command: make test
