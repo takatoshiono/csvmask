@@ -23,4 +23,4 @@ crossbuild:
 
 .PHONY: upload
 upload:
-	@ghr v$(VERSION) ./pkg/v$(VERSION)
+	@ghr -u takatoshiono v$(VERSION) ./pkg/v$(VERSION)
