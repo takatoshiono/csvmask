@@ -9,6 +9,10 @@ test:
 build:
 	@go build -ldflags=$(BUILD_LDFLAGS) ./...
 
+.PHONY: install
+install:
+	@go install -ldflags=$(BUILD_LDFLAGS) ./...
+
 .PHONY: devel-deps
 devel-deps:
 	@go get \

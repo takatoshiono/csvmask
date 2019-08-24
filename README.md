@@ -45,8 +45,22 @@ The following functions are defined.
 - hash
 - checksum
 
-## Install
+## Installation
+
+### Just get binaries
+
+Go to the [releases page](https://github.com/takatoshiono/csvmask/releases) and download zip file.
+
+### go get
 
 ```
 $ go get -u github.com/takatoshiono/csvmask
+```
+
+### Build yourself
+
+First clone the repository and
+
+```
+$ make install
 ```
