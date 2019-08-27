@@ -13,7 +13,7 @@ func right(n, c, s string) (string, error) {
 	}
 	cnt, err := strconv.ParseInt(n, 10, 32)
 	if err != nil {
-		return s, fmt.Errorf("failed to parse int: %v", err)
+		return "", fmt.Errorf("failed to parse int: %v", err)
 	}
 	chars := []rune(s)
 	return string(chars[0:len(chars)-int(cnt)]) + strings.Repeat(c, int(cnt)), nil

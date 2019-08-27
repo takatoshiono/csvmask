@@ -82,7 +82,6 @@ func TestReadFuncs(t *testing.T) {
 		{"checksum", "foo,bar", "{{checksum .Field1}},{{.Field2}}", "8c736521,bar"},
 		{"right", "foo,東京都港区芝公園4丁目2-8", `{{.Field1}},{{right "6" "x" .Field2}}`, "foo,東京都港区芝公園xxxxxx"},
 		{"right pipeline", "foo,東京都港区芝公園4丁目2-8", `{{.Field1}},{{.Field2 | right "6" "x"}}`, "foo,東京都港区芝公園xxxxxx"},
-		{"right with empty", "foo,東京都港区芝公園4丁目2-8", `{{.Field1}},{{.Field2 | right "6" ""}}`, "foo,東京都港区芝公園"},
 	}
 
 	for _, tt := range tests {
