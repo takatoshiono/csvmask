@@ -6,8 +6,8 @@ import (
 	"strings"
 )
 
-// maskright masks n characters to the right of s with c.
-func maskright(n, c, s string) (string, error) {
+// right masks n characters to the right of s with c.
+func right(n, c, s string) (string, error) {
 	cnt, err := strconv.ParseInt(n, 10, 32)
 	if err != nil {
 		return s, fmt.Errorf("failed to parse int: %v", err)

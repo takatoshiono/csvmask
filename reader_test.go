@@ -80,8 +80,9 @@ func TestReadFuncs(t *testing.T) {
 	}{
 		{"hash", "foo,bar", "{{hash .Field1}},{{.Field2}}", "LCa0a2j/xo/5m0U8HTBBNBNCLXBkg7+g+YpeiGJm564,bar"},
 		{"checksum", "foo,bar", "{{checksum .Field1}},{{.Field2}}", "8c736521,bar"},
-		{"maskright", "foo,東京都港区芝公園4丁目2-8", `{{.Field1}},{{maskright "6" "x" .Field2}}`, "foo,東京都港区芝公園xxxxxx"},
-		{"maskright pipeline", "foo,東京都港区芝公園4丁目2-8", `{{.Field1}},{{.Field2 | maskright "6" "x"}}`, "foo,東京都港区芝公園xxxxxx"},
+		{"right", "foo,東京都港区芝公園4丁目2-8", `{{.Field1}},{{right "6" "x" .Field2}}`, "foo,東京都港区芝公園xxxxxx"},
+		{"right pipeline", "foo,東京都港区芝公園4丁目2-8", `{{.Field1}},{{.Field2 | right "6" "x"}}`, "foo,東京都港区芝公園xxxxxx"},
+		{"right with empty", "foo,東京都港区芝公園4丁目2-8", `{{.Field1}},{{.Field2 | right "6" ""}}`, "foo,東京都港区芝公園"},
 	}
 
 	for _, tt := range tests {

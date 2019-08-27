@@ -22,13 +22,13 @@ var (
 	funcMap = template.FuncMap{
 		"hash":      hash,
 		"checksum":  checksum,
-		"maskright": maskright,
+		"right": right,
 	}
 
 	echoFuncMap = template.FuncMap{
 		"hash":      echo,
 		"checksum":  echo,
-		"maskright": echo,
+		"right": echo,
 	}
 )
 
