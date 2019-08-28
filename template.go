@@ -20,15 +20,17 @@ type (
 
 var (
 	funcMap = template.FuncMap{
-		"hash":      hash,
-		"checksum":  checksum,
-		"right": right,
+		"hash":     hash,
+		"checksum": checksum,
+		"right":    right,
+		"left":     left,
 	}
 
 	echoFuncMap = template.FuncMap{
-		"hash":      echo,
-		"checksum":  echo,
-		"right": echo,
+		"hash":     echo,
+		"checksum": echo,
+		"right":    echo,
+		"left":     echo,
 	}
 )
 
