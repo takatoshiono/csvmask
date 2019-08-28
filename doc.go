@@ -1,6 +1,7 @@
 /*
-csvmask masks comma-separated values (CSV) files.
+csvmask masks comma-separated values (CSV) data.
 csvmask reads from the standard input and writes to the standard output.
+csvmask expects the data utf-8 encoded.
 
 Usage:
 	csvmask [flags]
@@ -37,7 +38,17 @@ Functions
 
 Examples
 
-	TBD
+To mask second field of the record with hash:
+
+	cat testdata/test.csv | csvmask -template "{{.Field1}},{{hash .Field2}},{{.Field3}}"
+
+To skip header line:
+
+	cat testdata/test.csv | csvmask -template "{{.Field1}},{{hash .Field2}},{{.Field3}}" -skipheader
+
+If you want to mask data encoded other than utf-8, use tools like nkf:
+
+	cat testdata/test-sjis.csv | nkf -w | csvmask -template "{{.Field1}},{{hash .Field2}},{{.Field3}}"
 
 */
 package main
