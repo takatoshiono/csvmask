@@ -29,9 +29,11 @@ Functions
 	checksum
 		Returns checksum of the field value.
 	right
-		Returns string that masked n character to the right of the field value.
+		Returns string that masked n character to the right of the field value with c.
+		The syntax is {{right n "c" .FieldN}}.
 	left
-		Returns string that masked n character to the left of the field value.
+		Returns string that masked n character to the left of the field value with c.
+		The syntax is {{left n "c" .FieldN}}.
 
 Examples
 
