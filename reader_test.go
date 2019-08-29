@@ -72,18 +72,52 @@ func TestRead(t *testing.T) {
 }
 
 func TestReadFuncs(t *testing.T) {
+	type want struct {
+		skipHeader bool
+		str        string
+	}
 	tests := []struct {
 		name     string
 		str      string
 		template string
-		want     string
+		wants    []want
 	}{
-		{"hash", "foo,bar", "{{hash .Field1}},{{.Field2}}", "LCa0a2j/xo/5m0U8HTBBNBNCLXBkg7+g+YpeiGJm564,bar"},
-		{"checksum", "foo,bar", "{{checksum .Field1}},{{.Field2}}", "8c736521,bar"},
-		{"right", "foo,東京都港区芝公園4丁目2-8", `{{.Field1}},{{right 6 "x" .Field2}}`, "foo,東京都港区芝公園xxxxxx"},
-		{"right pipeline", "foo,東京都港区芝公園4丁目2-8", `{{.Field1}},{{.Field2 | right 6 "x"}}`, "foo,東京都港区芝公園xxxxxx"},
-		{"left", "foo,東京都港区芝公園4丁目2-8", `{{.Field1}},{{left 3 "x" .Field2}}`, "foo,xxx港区芝公園4丁目2-8"},
-		{"left pipeline", "foo,東京都港区芝公園4丁目2-8", `{{.Field1}},{{.Field2 | left 5 "x"}}`, "foo,xxxxx芝公園4丁目2-8"},
+		{"hash", "foo,bar", "{{hash .Field1}},{{.Field2}}",
+			[]want{
+				{false, "LCa0a2j/xo/5m0U8HTBBNBNCLXBkg7+g+YpeiGJm564,bar"},
+				{true, "foo,bar"},
+			},
+		},
+		{"checksum", "foo,bar", "{{checksum .Field1}},{{.Field2}}",
+			[]want{
+				{false, "8c736521,bar"},
+				{true, "foo,bar"},
+			},
+		},
+		{"right", "foo,東京都港区芝公園4丁目2-8", `{{.Field1}},{{right 6 "x" .Field2}}`,
+			[]want{
+				{false, "foo,東京都港区芝公園xxxxxx"},
+				{true, "foo,東京都港区芝公園4丁目2-8"},
+			},
+		},
+		{"right pipeline", "foo,東京都港区芝公園4丁目2-8", `{{.Field1}},{{.Field2 | right 6 "x"}}`,
+			[]want{
+				{false, "foo,東京都港区芝公園xxxxxx"},
+				{true, "foo,東京都港区芝公園4丁目2-8"},
+			},
+		},
+		{"left", "foo,東京都港区芝公園4丁目2-8", `{{.Field1}},{{left 3 "x" .Field2}}`,
+			[]want{
+				{false, "foo,xxx港区芝公園4丁目2-8"},
+				{true, "foo,東京都港区芝公園4丁目2-8"},
+			},
+		},
+		{"left pipeline", "foo,東京都港区芝公園4丁目2-8", `{{.Field1}},{{.Field2 | left 3 "x"}}`,
+			[]want{
+				{false, "foo,xxx港区芝公園4丁目2-8"},
+				{true, "foo,東京都港区芝公園4丁目2-8"},
+			},
+		},
 	}
 
 	for _, tt := range tests {
@@ -92,13 +126,19 @@ func TestReadFuncs(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			r := NewReader(bytes.NewBufferString(tt.str), template)
-			got, err := r.Read()
-			if err != nil {
-				t.Fatal(err)
-			}
-			if got != tt.want {
-				t.Errorf("want read %v, but got %v", tt.want, got)
+
+			for _, want := range tt.wants {
+				r := NewReader(bytes.NewBufferString(tt.str), template)
+				if want.skipHeader {
+					r.SkipHeader = true
+				}
+				got, err := r.Read()
+				if err != nil {
+					t.Fatal(err)
+				}
+				if got != want.str {
+					t.Errorf("want read %v, but got %v", want.str, got)
+				}
 			}
 		})
 	}
