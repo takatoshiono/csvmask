@@ -57,6 +57,14 @@ func (t *templateImpl) CloneWithEcho() (Template, error) {
 	return &templateImpl{template: tmpl.Funcs(echoFuncMap)}, nil
 }
 
-func echo(s string) string {
+func echo(a ...interface{}) string {
+	if a == nil {
+		return ""
+	}
+	// The original value is always at the end of the parameters.
+	s, ok := a[len(a)-1].(string)
+	if !ok {
+		return ""
+	}
 	return s
 }
