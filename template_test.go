@@ -13,6 +13,8 @@ func TestNewTemplate(t *testing.T) {
 		{"no func", "{{.Field1}},{{.Field2}},{{.Field3}}", false},
 		{"hash func", "{{.Field1}},{{hash .Field2}},{{.Field3}}", false},
 		{"checksum func", "{{.Field1}},{{checksum .Field2}},{{.Field3}}", false},
+		{"right func", `{{.Field1}},{{right 3 "x" .Field2}},{{.Field3}}`, false},
+		{"left func", `{{.Field1}},{{left 3 "x" .Field2}},{{.Field3}}`, false},
 		{"invalid syntax", "{{.Field1},{{ .Field2}}", true},
 		{"invalid func", "{{.Field1}},{{foofunc .Field2}}", true},
 	}

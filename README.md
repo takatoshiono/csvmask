@@ -44,6 +44,8 @@ The following functions are defined.
 
 - hash
 - checksum
+- right
+- left
 
 ## Installation
 
