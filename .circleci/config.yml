@@ -11,4 +11,8 @@ jobs:
       - checkout
       - run:
           name: Run test
-          command: make test
+          command: make coverage
+      - run:
+          name: Upload coverage
+          command: |
+            bash <(curl -s https://codecov.io/bash)

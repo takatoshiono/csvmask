@@ -1,4 +1,4 @@
-# csvmask [![CircleCI](https://circleci.com/gh/takatoshiono/csvmask.svg?style=svg)](https://circleci.com/gh/takatoshiono/csvmask)
+# csvmask [![CircleCI](https://circleci.com/gh/takatoshiono/csvmask.svg?style=svg)](https://circleci.com/gh/takatoshiono/csvmask) [![codecov](https://codecov.io/gh/takatoshiono/csvmask/branch/master/graph/badge.svg)](https://codecov.io/gh/takatoshiono/csvmask)
 csvmask is a CSV masking tool.
 
 ## Usage

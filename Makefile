@@ -5,6 +5,10 @@ BUILD_LDFLAGS := "-X main.version=$(VERSION)"
 test:
 	@go test -v -race ./...
 
+.PHONY: coverage
+coverage:
+	@go test -v -race -coverprofile=coverage.txt -covermode=atomic
+
 .PHONY: build
 build:
 	@go build -ldflags=$(BUILD_LDFLAGS) ./...
