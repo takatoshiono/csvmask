@@ -1,4 +1,4 @@
-VERSION := 0.1.1
+VERSION := 0.1.2
 BUILD_LDFLAGS := "-X main.version=$(VERSION)"
 
 .PHONY: test

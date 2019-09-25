@@ -10,6 +10,9 @@ func right(n int, c, s string) string {
 		return s
 	}
 	chars := []rune(s)
+	if len(chars) <= n {
+		return strings.Repeat(c, len(chars))
+	}
 	return string(chars[0:len(chars)-n]) + strings.Repeat(c, n)
 }
 
@@ -19,5 +22,8 @@ func left(n int, c, s string) string {
 		return s
 	}
 	chars := []rune(s)
+	if len(chars) <= n {
+		return strings.Repeat(c, len(chars))
+	}
 	return strings.Repeat(c, n) + string(chars[n:])
 }
